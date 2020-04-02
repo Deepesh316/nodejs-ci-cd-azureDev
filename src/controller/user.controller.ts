@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import httpErrors from "http-errors";
-import User from "../models/user.model";
-import UserService from "../services/user.service";
-
-const userService = new UserService();
+import { UserService } from "../services/user.service";
 
 class UserController {
   /**
@@ -12,12 +9,14 @@ class UserController {
    * @param res
    * @param next
    */
-  async createUser(req: Request, res: Response, next: NextFunction) {
-    const { name, email, password } = req.body;
-    const user = new User({ name, email, password });
-
+  async createUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
     try {
-      const userCreated = await userService.createUserService(user);
+      const userCreated = await UserService.createUserService(req.body);
+
       res.status(201).json({ status: 201, data: userCreated });
     } catch (err) {
       next(httpErrors(500, err.message));

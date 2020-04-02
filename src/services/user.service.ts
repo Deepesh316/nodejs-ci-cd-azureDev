@@ -1,21 +1,15 @@
 import User, { IUser } from "../models/user.model";
 import HashPassword from "../utils/password";
 
-class UserService {
-  private user;
-
-  constructor() {
-    this.user = User;
-  }
-
+export class UserService {
   /**
    * Function to check existence of user if not then create new user in db
-   * @param user
+   * @param User
    */
-  public async createUserService(user: IUser): Promise<any> {
+  public static async createUserService(user: IUser): Promise<any> {
     try {
       // Check for existence of user in db
-      const userRecord = await this.user.findOne({ email: user.email });
+      const userRecord = await User.findOne({ email: user.email });
       if (userRecord) {
         throw new Error("RECORD ALREADY EXISTS");
       }
@@ -24,12 +18,10 @@ class UserService {
       user.password = encPwd;
       user.role = "user";
 
-      const createdUser = await this.user.create(user); // create user
+      const createdUser = await User.create(user); // create user
       return createdUser;
     } catch (error) {
       throw error;
     }
   }
 }
-
-export default UserService;
